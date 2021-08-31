@@ -1,7 +1,25 @@
+import { useEffect, useState } from 'react'
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [baseUrl, setBaseUrl] = useState("");
+  useEffect(() => {
+    async function fetchUrl() {
+      if (process.env.NODE_ENV !== 'production') {
+        setBaseUrl(process.env.REACT_APP_TEST_API)
+      } else {
+          const url = '/.netlify/functions/baseUrl'
+          try {
+            const res = await fetch(url).then((res) => res.json())
+            setBaseUrl(res.baseUrl)
+          } catch (err) {
+            console.log(err)
+          }
+        } 
+      }
+    fetchUrl()
+  }, [])
   return (
     <div className="App">
       <header className="App-header">
@@ -17,6 +35,7 @@ function App() {
         >
           Learn React
         </a>
+        <p>{baseUrl}</p>
       </header>
     </div>
   );
