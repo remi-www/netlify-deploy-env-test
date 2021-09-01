@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
     const res = await axios.get(`${process.env.REACT_APP_BASE_URL}${endpoint}`);
     return {
       statusCode: 200,
-      body: JSON.stringify({ data: res.data[0] }),
+      body: JSON.stringify({ data: res.data }),
     };
   } catch (error) {
     console.log(error);
