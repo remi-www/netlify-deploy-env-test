@@ -1,25 +1,26 @@
-import { useEffect, useState } from 'react'
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
-  const [baseUrl, setBaseUrl] = useState("");
+  const [apiData, setApiData] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    async function fetchUrl() {
-      if (process.env.NODE_ENV !== 'production') {
-        setBaseUrl(process.env.REACT_APP_TEST_API)
-      } else {
-          const url = '/.netlify/functions/baseUrl'
-          try {
-            const res = await fetch(url).then((res) => res.json())
-            setBaseUrl(res.baseUrl)
-          } catch (err) {
-            console.log(err)
-          }
-        } 
+    async function fetchApiData() {
+      const url = "/.netlify/functions/Fetch?endpoint=api/v1/artists";
+      try {
+        setLoading(true);
+        const res = await fetch(url).then((res) => res.json());
+        console.log(res.data[0]["name"]);
+        setApiData(res.data[0]["name"]);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
       }
-    fetchUrl()
-  }, [])
+    }
+    fetchApiData();
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
@@ -35,7 +36,7 @@ function App() {
         >
           Learn React
         </a>
-        <p>{baseUrl}</p>
+        <p>{loading ? "Loading..." : apiData}</p>
       </header>
     </div>
   );
